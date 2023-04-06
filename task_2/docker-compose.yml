@@ -1,0 +1,33 @@
+version: '3'
+services:
+  db:
+    restart: always
+    image: postgres:13
+    volumes:
+    - ./pg_db:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=123qwe
+      - POSTGRES_DB=cat_library
+
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+      
+  app:
+    build: ./app
+    restart: always
+    container_name: flask
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://app:123qwe@db:5432/cat_library
+    volumes:
+      - ./app:/app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+
+
+
+    
